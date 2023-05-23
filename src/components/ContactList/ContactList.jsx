@@ -11,7 +11,10 @@ export function ContactList() {
     const filtered = useSelector(getFilter)
     const dispatch = useDispatch();
 
-     const getFilteredContacts = () => {
+  
+
+
+       const getFilteredContacts = () => {
          const normalizeFilter = filtered.toLowerCase();
         return contacts.filter(contact => contact.name.toLowerCase().includes(normalizeFilter));
   }
