@@ -1,22 +1,20 @@
 import { Formik, Field } from 'formik';
 import * as yup from 'yup';
-// import { nanoid } from 'nanoid'
 import { LabelText, ButtonForm, Label, FormComponent } from './ContactForm.styled';
-// import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { getContact } from 'redux/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
 
 export function ContactForm() {
    
-    const contacts = useSelector(getContacts)
-    const dispatch = useDispatch()
+    const contacts = useSelector(getContact);
+    const dispatch = useDispatch();
 
-    // const initialValues = {
-    //     name: '',
-    //     number: '',
-    // }
+    const initialValues = {
+        name: '',
+        number: '',
+    }
 
     const schema = yup.object().shape({
         name: yup.string().required(),
@@ -24,33 +22,23 @@ export function ContactForm() {
     })
 
     function handleSubmit(values, {resetForm}) {
-        // console.log(values);
         
-        // const data = {
-        //     id: nanoid(),
-        //     name: values.name,
-        //     number: values.number,
-            
-        // }
-
         const isDuplicate = contacts.some( contact => contact.name.toLowerCase() === values.name.toLowerCase())
 
         if (isDuplicate) {
-            // toast.error(`${data.name} is already in contacts`)
             toast.error(`${values.name} is already in contacts`);
             return
             
         } else {
             
-        //    onAddContactBtn(data);
-            dispatch(addContact(values.name.trim(), values.number.trim()))
+           dispatch(addContact(values.name.trim(), values.number.trim()));
             resetForm();
         }
     }
 
     return (
         <Formik
-            initialValues={{ name: '', number: '' }}
+            initialValues={initialValues}
             onSubmit={handleSubmit}
             validationSchema={schema}
         >
@@ -85,14 +73,3 @@ export function ContactForm() {
 } 
 
 
-// ContactForm.propTypes = {
-//     contacts: PropTypes.arrayOf(
-//         PropTypes.shape({
-//             id: PropTypes.string.isRequired,
-//             name: PropTypes.string.isRequired,
-//             number: PropTypes.string.isRequired,
-//         }).isRequired
-        
-//     ).isRequired,
-//     onAddContactBtn: PropTypes.func.isRequired,
-// }
